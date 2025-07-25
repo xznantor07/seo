@@ -5,30 +5,44 @@
   <title>📋 View Submissions</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f9f9f9;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
       padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-top: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     th, td {
       border: 1px solid #ddd;
-      padding: 10px;
+      padding: 12px;
       text-align: left;
     }
     th {
-      background: #007bff;
+      background-color: #007bff;
       color: white;
     }
     tr:nth-child(even) {
-      background: #f2f2f2;
+      background-color: #f9f9f9;
     }
-    h2 {
-      color: #333;
+    @media screen and (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      th {
+        position: sticky;
+        top: 0;
+        background: #007bff;
+        z-index: 2;
+      }
     }
   </style>
 </head>
@@ -43,7 +57,7 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Data rows will be inserted here -->
+      <!-- Data will be inserted here -->
     </tbody>
   </table>
 
@@ -65,23 +79,28 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
-    const dataRef = ref(database, 'data');
+    const usersRef = ref(database, 'users');
 
     const tableBody = document.querySelector('#dataTable tbody');
 
-    onValue(dataRef, (snapshot) => {
-      tableBody.innerHTML = ''; // Clear old data
-      const data = snapshot.val();
+    onValue(usersRef, (snapshot) => {
+      tableBody.innerHTML = '';
+      const users = snapshot.val();
 
-      for (const id in data) {
-        const { name, phone, password } = data[id];
-        const row = `
-          <tr>
-            <td>${name}</td>
-            <td>${phone}</td>
-            <td>${password}</td>
-          </tr>`;
-        tableBody.insertAdjacentHTML('beforeend', row);
+      if (users) {
+        for (const phone in users) {
+          const user = users[phone];
+          const row = `
+            <tr>
+              <td>${user.name}</td>
+              <td>${user.phone}</td>
+              <td>${user.password}</td>
+            </tr>
+          `;
+          tableBody.insertAdjacentHTML('beforeend', row);
+        }
+      } else {
+        tableBody.innerHTML = '<tr><td colspan="3">No data found</td></tr>';
       }
     });
   </script>
